@@ -1,0 +1,40 @@
+CC = gcc
+CXX = g++ -std=c++14
+
+source_dir = .
+
+glad_inc = $(source_dir)/deps
+
+INCLUDES = -I$(glad_inc) -I/usr/local/include
+LIBRARIES = 
+
+CFLAGS = -Wall -ggdb -g $(INCLUDES)
+CXXFLAGS = -Wall -ggdb -g $(INCLUDES)
+LDFLAGS = $(LIBRARIES) -L/usr/local/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+
+TARGET = clipper
+cpp_files = clipper.cpp mesh.cpp shader.cpp window.cpp gl_error.cpp grid.cpp \
+            camera.cpp util.cpp flat_lighter.cpp
+
+TARGET2 = rasterizer
+cpp_files2 = rasterizer.cpp mesh.cpp shader.cpp window.cpp gl_error.cpp \
+            grid.cpp camera.cpp util.cpp flat_lighter.cpp
+
+c_files = deps/glad.c
+
+objects = $(cpp_files:.cpp=.o) $(c_files:.c=.o)
+
+objects2 = $(cpp_files2:.cpp=.o) $(c_files:.c=.o)
+
+all: $(TARGET) $(TARGET2)
+
+$(TARGET): $(objects)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+$(TARGET2): $(objects2)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY : clean
+clean :
+	-rm -f $(TARGET) $(TARGET2) $(objects) $(objects2)
+
