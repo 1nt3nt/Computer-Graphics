@@ -1,0 +1,32 @@
+CC = gcc
+CXX = g++ -std=c++14
+
+INCLUDES = -I$(glad_inc)
+LIBRARIES = 
+
+source_dir = .
+
+glad_inc = $(source_dir)/deps
+
+CFLAGS = -Wall -ggdb -O3 $(INCLUDES)
+CXXFLAGS = -Wall -ggdb -O3 $(INCLUDES) -std=c++11
+
+LDFLAGS = $(LIBRARIES) -lglfw3dll -lopengl32
+
+TARGET1 = robot.exe
+cpp_files1 = robot.cpp shader.cpp window.cpp gl_error.cpp \
+            camera.cpp util.cpp grid.cpp mesh3d.cpp shapes.cpp\
+            matrix_stack.cpp diffuse_lighter.cpp kbui.cpp
+
+c_files = deps/glad.c
+
+objects1 = $(cpp_files1:.cpp=.o) $(c_files:.c=.o)
+
+all: $(TARGET1)
+
+$(TARGET1): $(objects1) 
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY : clean
+clean:
+	-rm -f $(TARGET1) $(objects1)

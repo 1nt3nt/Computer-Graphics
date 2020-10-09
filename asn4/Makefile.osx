@@ -1,0 +1,32 @@
+CC = gcc
+CXX = g++ -g -std=c++14 -Wconversion
+
+INCLUDES = -I$(glad_inc) -I/usr/local/include
+LIBRARIES = 
+
+source_dir = .
+
+glad_inc = $(source_dir)/deps
+
+CFLAGS = -Wall -ggdb -O3 $(INCLUDES)
+CXXFLAGS = -Wall -ggdb -O3 $(INCLUDES)
+LDFLAGS = $(LIBRARIES) -L/usr/local/lib -lglfw3 -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+
+TARGET1 = robot
+cpp_files1 = robot.cpp shader.cpp window.cpp gl_error.cpp \
+            camera.cpp util.cpp grid.cpp mesh3d.cpp shapes.cpp\
+            matrix_stack.cpp diffuse_lighter.cpp kbui.cpp
+
+c_files = deps/glad.c
+
+objects1 = $(cpp_files1:.cpp=.o) $(c_files:.c=.o)
+
+all: $(TARGET1)
+
+$(TARGET1): $(objects1) 
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY : clean
+clean:
+	-rm -f $(TARGET1) $(objects1)
+
